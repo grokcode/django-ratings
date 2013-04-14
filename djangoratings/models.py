@@ -34,7 +34,6 @@ class Vote(models.Model):
         return u"%s voted %s on %s" % (self.user_display, self.score, self.content_object)
 
     def save(self, *args, **kwargs):
-        self.date_changed = now()
         super(Vote, self).save(*args, **kwargs)
 
     def user_display(self):

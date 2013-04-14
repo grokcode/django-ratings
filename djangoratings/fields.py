@@ -127,7 +127,7 @@ class RatingManager(object):
     def get_iterable_range(self):
         return range(1, self.field.range) #started from 1, because 0 is equal to delete
         
-    def add(self, score, user, ip_address, cookies={}, commit=True):
+    def add(self, score, user, ip_address, date=None, cookies={}, commit=True):
         """add(score, user, ip_address)
         
         Used to add a rating to an object."""
@@ -155,7 +155,11 @@ class RatingManager(object):
             score = score,
             ip_address = ip_address,
         )
-        
+        if date:
+            defaults['date_changed'] = date
+        else:
+            defaults['date_changed'] = now()
+
         kwargs = dict(
             content_type    = self.get_content_type(),
             object_id       = self.instance.pk,
