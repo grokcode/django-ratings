@@ -286,8 +286,8 @@ class RatingManager(object):
             key             = self.field.key,
         ).aggregate(Sum('score'), Count('score'))
 
-        obj_score = results['score__count']
-        obj_votes = results['score__sum']
+        obj_score = max(results['score__count'], 0)
+        obj_votes = max(results['score__sum'], 0)
 
         score, created = Score.objects.get_or_create(
             content_type    = self.get_content_type(),
