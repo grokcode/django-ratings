@@ -1,4 +1,4 @@
-from django.db.models import IntegerField, PositiveIntegerField
+from django.db.models import IntegerField, PositiveIntegerField, Sum, Count
 from django.conf import settings
 
 import forms
@@ -280,13 +280,14 @@ class RatingManager(object):
     
     def _update(self, commit=False):
         """Forces an update of this rating (useful for when Vote objects are removed)."""
-        votes = Vote.objects.filter(
+        results = Vote.objects.filter(
             content_type    = self.get_content_type(),
             object_id       = self.instance.pk,
             key             = self.field.key,
-        )
-        obj_score = sum([v.score for v in votes])
-        obj_votes = len(votes)
+        ).aggregate(Sum('score'), Count('score'))
+
+        obj_score = results['score__count']
+        obj_votes = results['score__sum']
 
         score, created = Score.objects.get_or_create(
             content_type    = self.get_content_type(),
