@@ -349,7 +349,7 @@ class RatingField(IntegerField):
 
         # Votes tally field
         self.votes_field = PositiveIntegerField(
-            editable=False, default=0, blank=True)
+            editable=False, default=0, blank=True, db_index=True)
         cls.add_to_class("%s_votes" % (self.name,), self.votes_field)
 
         # Score sum field
